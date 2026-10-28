@@ -1,0 +1,41 @@
+Experiment 2: Prolog-style programs written in swish prolog compiler
+ 
+# Program 1: Find maximum and minimum of two numbers
+Prolog: 
+max(A, B, A) :- A >= B.
+max(A, B, B) :- A < B.
+
+min(A, B, A) :- A =< B.
+min(A, B, B) :- A > B.
+Query: 
+max(5, 8, M).
+min(5, 8, M).
+
+# Program 2: 1. Check whether a number is positive
+Prolog: 
+positive(N) :- N > 0.
+Query: 
+positive(5). #change the values
+ 
+# Program 3: Find the length of a list
+Prolog: 
+find_length([], 0).
+find_length([_|T], N) :-
+    find_length(T, N1),
+    N is N1 + 1.
+Query: 
+find_length([a,b,c,d], N).
+ 
+# Program 4: Sum of two numbers
+Prolog: 
+sum(A, B, S) :- S is A + B.
+Query: 
+sum(5, 3, S). #change the values
+
+
+# Program 5: Check whether a number is greater than 10
+Prolog: 
+greater_than_10(N) :- N > 10.
+Query: 
+greater_than_10(15).#change the values
+
