@@ -1,0 +1,102 @@
+# Experiment 4: A* search (informed search) - (a) weighted graph, (b) 8-puzzle
+import heapq
+
+graph = {
+    'A': [('B', 2), ('E', 3)],
+    'B': [('C', 1), ('G', 9)],
+    'C': [],
+    'E': [('D', 6)],
+    'D': [('G', 1)],
+    'G': []
+}
+
+h = {'A': 11, 'B': 6, 'C': 99, 'D': 1, 'E': 7, 'G': 0}
+
+def astar(start, goal):
+    open_list = [(h[start], 0, start, [start])]
+    closed = set()
+
+    while open_list:
+        f, g, node, path = heapq.heappop(open_list)
+
+        if node == goal:
+            return path, g
+
+        if node in closed:
+            continue
+
+        closed.add(node)
+
+        for nb, cost in graph[node]:
+            if nb not in closed:
+                heapq.heappush(open_list, (g + cost + h[nb], g + cost, nb, path + [nb]))
+
+    return None, None
+
+path, cost = astar('A', 'G')
+print("Shortest path:", path)
+print("Total cost:", cost)
+
+
+
+
+              
+#2 8 puzzle
+import heapq
+
+def manhattan(state, goal):
+    d = 0
+    for i, tile in enumerate(state):
+        if tile != 0:
+            j = goal.index(tile)
+            d += abs(i // 3 - j // 3) + abs(i % 3 - j % 3)
+    return d
+
+def neighbors(state):
+    z = state.index(0)
+    r, c = divmod(z, 3)
+
+    for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+        nr, nc = r + dr, c + dc
+        if 0 <= nr < 3 and 0 <= nc < 3:
+            s = list(state)
+            s[z], s[nr * 3 + nc] = s[nr * 3 + nc], s[z]
+            yield tuple(s)
+
+def astar_puzzle(start, goal):
+    open_list = [(manhattan(start, goal), 0, start, [start])]
+    visited = set()
+
+    while open_list:
+        f, g, state, path = heapq.heappop(open_list)
+
+        if state == goal:
+            return path
+
+        if state in visited:
+            continue
+
+        visited.add(state)
+
+        for nb in neighbors(state):
+            if nb not in visited:
+                new_g = g + 1
+                new_f = new_g + manhattan(nb, goal)
+                heapq.heappush(open_list, (new_f, new_g, nb, path + [nb]))
+
+    return None
+
+start = (1, 2, 3, 4, 0, 6, 7, 5, 8)
+goal = (1, 2, 3, 4, 5, 6, 7, 8, 0)
+
+solution = astar_puzzle(start, goal)
+
+if solution:
+    print("8-puzzle solved in", len(solution) - 1, "moves")
+    for step in solution:
+        for i in range(0, 9, 3):
+            print(list(step[i:i + 3]))
+        print()
+else:
+    print("No solution found")
+    
