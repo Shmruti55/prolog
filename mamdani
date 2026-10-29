@@ -1,0 +1,44 @@
+import numpy as np
+
+def trimf(x, a, b, c):
+    if x <= a:
+        return 1.0 if a == b else 0.0
+    if x >= c:
+        return 1.0 if b == c else 0.0
+    if x == b:
+        return 1.0
+    if x < b:
+        return (x - a) / (b - a)
+    return (c - x) / (c - b)
+
+temp = 32
+
+low = trimf(temp, 0, 0, 20)
+medium = trimf(temp, 10, 20, 30)
+high = trimf(temp, 20, 40, 40)
+
+print("Temperature:", temp, "°C")
+print("\nTemperature Membership Values:")
+print("Low =", round(low, 2))
+print("Medium =", round(medium, 2))
+print("High =", round(high, 2))
+
+print("\nFuzzy Rules:")
+print("Rule 1: IF temperature is LOW THEN fan is SLOW")
+print("Rule 2: IF temperature is MEDIUM THEN fan is MODERATE")
+print("Rule 3: IF temperature is HIGH THEN fan is FAST")
+
+x = np.arange(0, 101)
+slow = np.array([trimf(i, 0, 0, 50) for i in x])
+moderate = np.array([trimf(i, 25, 50, 75) for i in x])
+fast = np.array([trimf(i, 50, 100, 100) for i in x])
+
+out = np.maximum.reduce([
+    np.minimum(low, slow),
+    np.minimum(medium, moderate),
+    np.minimum(high, fast)
+])
+
+fan_speed = np.sum(x * out) / np.sum(out)
+
+print("\nFinal Fan Speed =", round(fan_speed, 2), "%")
