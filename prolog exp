@@ -37,5 +37,5 @@ sum(5, 3, S). #change the values
 Prolog: 
 greater_than_10(N) :- N > 10.
 Query: 
-greater_than_10(15).#change the values
+greater_than_10(15).  #change the values
 
