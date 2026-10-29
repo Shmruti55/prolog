@@ -1,0 +1,22 @@
+inputs = [(0, 0), (0, 1), (1, 0), (1, 1)]
+target = [0, 0, 0, 1]                      # AND truth table
+ 
+w1 = w2 = bias = 0.0                       # initial weights and bias
+lr, epochs, threshold = 0.1, 10, 1.0       # learning rate, epochs, threshold
+ 
+def predict(x1, x2):
+    return 1 if x1 * w1 + x2 * w2 + bias >= threshold else 0   # step activation
+ 
+for epoch in range(epochs):
+    for (x1, x2), t in zip(inputs, target):
+        error = t - predict(x1, x2)        # error = target - output
+        w1   += lr * error * x1            # perceptron learning rule
+        w2   += lr * error * x2
+        bias += lr * error
+    print(f"Epoch {epoch+1:2d}: w1={w1:.2f}  w2={w2:.2f}  bias={bias:.2f}")
+ 
+print("\nFinal AND Gate Results:")
+for x1, x2 in inputs:
+    print(f"{x1} AND {x2} = {predict(x1, x2)}")
+print(f"\nFinal weights: w1={w1:.2f}, w2={w2:.2f}, bias={bias:.2f}")
+
